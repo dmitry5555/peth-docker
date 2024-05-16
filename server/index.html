@@ -1,0 +1,53 @@
+<style>
+    body {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        height: 100vh;
+        margin: 0;
+        gap: 10px;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+    pre {
+        background: #f0f0f0;
+        overflow: auto;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+	#log-content-1 { background: lemonchiffon;}
+	#log-content-2 { background: lavender;}
+	#log-content-3 { background: lightblue;}
+	#log-content-4 { background: lightsteelblue;}
+</style>
+
+<body>
+    <pre id="log-content-1"></pre>
+    <pre id="log-content-2"></pre>
+    <pre id="log-content-3"></pre>
+    <pre id="log-content-4"></pre>
+</body>
+<script>
+    function fetchLog(logElementId, logFileName) {
+        fetch('/' + logFileName)
+            .then(response => response.text())
+            .then(content => {
+                const preElement = document.getElementById(logElementId);
+                preElement.innerText = content;
+            });
+    }
+
+    setInterval(() => {
+        fetchLog('log-content-1', 'logs/parse.log');
+        fetchLog('log-content-2', 'logs/check.log');
+        fetchLog('log-content-3', 'logs/bot.log');
+        fetchLog('log-content-4', 'logs/sender.log');
+    }, 15000);  // Обновление каждые 10 секунд
+
+    window.onload = () => {
+        fetchLog('log-content-1', 'logs/parse.log');
+        fetchLog('log-content-2', 'logs/check.log');
+        fetchLog('log-content-3', 'logs/bot.log');
+        fetchLog('log-content-4', 'logs/sender.log');
+    };
+</script>

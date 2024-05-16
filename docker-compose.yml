@@ -1,0 +1,95 @@
+services:
+  postgres:
+    image: postgres:16.3
+    restart: on-failure
+    container_name: db_container
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    # ports:
+    #   - "5432:5432"
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+
+  script-parse:
+    build:
+      context: .
+      dockerfile: ./script-parse/Dockerfile
+    container_name: script_parse
+    depends_on:
+      - postgres
+    restart: on-failure
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      TG_API_TOKEN: ${TG_API_TOKEN}
+      ANKR_TOKEN: ${ANKR_TOKEN}
+
+    volumes:
+      - logs:/var/logs
+
+  script-check:
+    build:
+      context: .
+      dockerfile: ./script-check/Dockerfile
+    container_name: script_check
+    depends_on:
+      - postgres
+    restart: on-failure
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      TG_API_TOKEN: ${TG_API_TOKEN}
+      ANKR_TOKEN: ${ANKR_TOKEN}
+    volumes:
+      - logs:/var/logs
+
+  tg-sender:
+    build:
+      context: .
+      dockerfile: ./tg-sender/Dockerfile
+    container_name: tg_sender
+    depends_on:
+      - postgres
+    restart: on-failure
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      TG_API_TOKEN: ${TG_API_TOKEN}
+    volumes:
+      - logs:/var/logs
+
+  tg-bot:
+    build:
+      context: .
+      dockerfile: ./tg-bot/Dockerfile
+    container_name: tg_bot
+    depends_on:
+      - postgres
+    restart: on-failure
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      TG_API_TOKEN: ${TG_API_TOKEN}
+    volumes:
+      - logs:/var/logs
+
+  server:
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+    restart: on-failure
+    volumes:
+      - logs:/app/logs
+    ports:
+      - 8080:8080
+
+
+volumes:
+  dbdata:
+  logs:
