@@ -45,4 +45,4 @@ jobs:
         host: ${{ secrets.VPS_IP }}
         username: root
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: cd /home/peth-docker && make 
+        script: cd /home/peth-docker && make deploy
