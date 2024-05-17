@@ -10,3 +10,6 @@ logs:
 	docker-compose logs -f
 reset:
 	docker-compose build --no-cache
+
+deploy:
+	git pull && docker-compose build && docker-compose up -d
