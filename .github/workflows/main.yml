@@ -43,6 +43,6 @@ jobs:
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.VPS_IP }}
-        username: your-username
+        username: root
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: cd /home/peth-docker && make deploy
+        script: cd /home/peth-docker && make 
