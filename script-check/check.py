@@ -9,7 +9,7 @@ from datetime import datetime
 
 # from dotenv import load_dotenv
 from db import db, initialize_db, add_message, get_tokens, upd_is_in_range, upd_liquidity, get_user_tokens
-# import os
+import os
 
 # Установка точности для десятичных вычислений
 getcontext().prec = 50

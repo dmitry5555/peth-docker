@@ -1,6 +1,5 @@
 FROM python:3.9-slim
 
-
 COPY ./common/ /app
 COPY ./tg-bot/ /app
 RUN pip install --upgrade pip
