@@ -4,6 +4,7 @@ import sys
 from web3 import Web3
 from decimal import Decimal, getcontext
 import logging
+from logging.handlers import RotatingFileHandler
 import time
 from datetime import datetime
 
@@ -15,9 +16,10 @@ import os
 getcontext().prec = 50
 
 # Настройка логирования
-# logging.basicConfig(level=logging.INFO)
-logging.basicConfig(filename='/var/logs/check.log', format='%(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
+handler = RotatingFileHandler(filename='/var/logs/check.log', maxBytes=1048576, backupCount=10)
+logger.addHandler(handler)
+logger.setLevel(logging.INFO)
 
 def get_price_from_tick(tick: int, token0_decimals: int, token1_decimals: int) -> Decimal:
 	"""

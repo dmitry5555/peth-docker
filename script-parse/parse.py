@@ -2,6 +2,7 @@
 
 from web3 import Web3
 import logging
+from logging.handlers import RotatingFileHandler
 import time
 
 # from dotenv import load_dotenv
@@ -9,8 +10,10 @@ from db import db, initialize_db, add_token, get_users, add_message, connect_use
 import os
 
 # Настройка логирования
-logging.basicConfig(filename='/var/logs/parse.log', format='%(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
+handler = RotatingFileHandler(filename='/var/logs/parse.log', maxBytes=1048576, backupCount=10)
+logger.addHandler(handler)
+logger.setLevel(logging.INFO)
 
 user = os.getenv('POSTGRES_USER')
 ankr_token = os.getenv('ANKR_TOKEN')

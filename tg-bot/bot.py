@@ -9,12 +9,16 @@ import os
 import asyncio
 import re
 import logging
+from logging.handlers import RotatingFileHandler
 
 # logging.getLogger("requests").setLevel(logging.WARNING)
 # logging.getLogger("aiohttp").setLevel(logging.WARNING)
 
-logging.basicConfig(filename='/var/logs/bot.log', format='%(message)s', level=logging.INFO)
+# Настройка логирования
 logger = logging.getLogger(__name__)
+handler = RotatingFileHandler(filename='/var/logs/bot.log', maxBytes=1048576, backupCount=10)
+logger.addHandler(handler)
+logger.setLevel(logging.INFO)
 
 async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 	try:

@@ -1,6 +1,7 @@
 # рассылает обновления по всем чатам(пользователям)
 
 import logging
+from logging.handlers import RotatingFileHandler
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 from telegram.error import TelegramError
@@ -13,8 +14,12 @@ import asyncio
 # logging.getLogger("requests").setLevel(logging.WARNING)
 # logging.getLogger("aiohttp").setLevel(logging.WARNING)
 
-logging.basicConfig(filename='/var/logs/sender.log', format='%(message)s', level=logging.INFO)
+# Настройка логирования
 logger = logging.getLogger(__name__)
+handler = RotatingFileHandler(filename='/var/logs/sender.log', maxBytes=1048576, backupCount=10)
+logger.addHandler(handler)
+logger.setLevel(logging.INFO)
+
 
 async def send_message():
 	bot = Application.builder().token(token).build().bot # до 30 сообщений в секунду но это не точно
