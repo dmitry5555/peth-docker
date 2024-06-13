@@ -37,9 +37,10 @@ class Token(BaseModel):
 	is_manual = BooleanField(default=False)
 	liquidity = CharField()
 	is_in_range = BooleanField(default=False)
+	network = CharField()
 
 	class Meta:
-		database = db 
+		database = db
 
 class UserToken(BaseModel):
     chat_id = IntegerField()
@@ -88,9 +89,9 @@ def get_users():
 
 # кейсы   1 - новая позииция  2 - ликвидность изменилась после 0  3 - ликвидность также выше нуля (ничего не делать)
 
-def add_token(token_id, is_manual, liquidity, is_in_range):
+def add_token(token_id, is_manual, liquidity, is_in_range, network):
 	with db:
-		token, created = Token.get_or_create(token_id=token_id, defaults={'is_manual': is_manual, 'liquidity': liquidity, 'is_in_range': is_in_range})
+		token, created = Token.get_or_create(token_id=token_id, network=network, defaults={'is_manual': is_manual, 'liquidity': liquidity, 'is_in_range': is_in_range})
 		if created:
 			return True
 
@@ -98,14 +99,14 @@ def connect_user_token(chat_id, token_id):
 	with db:
 		token, created = UserToken.get_or_create(chat_id=chat_id, token_id=token_id)
 		# if created:
-		# 	return true
+		# return true
 
-def get_user_tokens(token_id):
+def get_users_with_token(token_id):
 	with db:
-		user_tokens = []
-		for user_token in UserToken.select().where(UserToken.token_id == token_id):
-			user_tokens.append(user_token)
-		return user_tokens
+		users_with_token = []
+		for user_with_token in UserToken.select().where(UserToken.token_id == token_id):
+			users_with_token.append(user_with_token)
+		return users_with_token
 
 def upd_liquidity(token_id, liquidity):
 	with db:
@@ -154,11 +155,11 @@ def msgs_to_sent():
 			messages.append(message)
 		return messages
 
-def mark_as_sent(sent_ids):
-	with db:
-		for sent_id in sent_ids:
-			query = Message.update(is_sent=True).where(Message.id == sent_id)
-			query.execute()
+# def mark_as_sent(sent_ids):
+# 	with db:
+# 		for sent_id in sent_ids:
+# 			query = Message.update(is_sent=True).where(Message.id == sent_id)
+# 			query.execute()
 
 def mark_as_sent(sent_id):
 	with db:

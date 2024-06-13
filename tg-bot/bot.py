@@ -28,9 +28,9 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
 			resp_text = '👋 Welcome! Please send your wallet address or NFT ID to monitor.'
 		if inp_text.startswith('0x'):
 			resp_text = add_user(update.effective_chat.id, inp_text)
-		if re.match(r'^\d{6}$', inp_text):
-			resp_text = add_token(int(inp_text), True, 0, False)
-			connect_user_token(update.effective_chat.id, int(inp_text))
+		# if re.match(r'^\d{6}$', inp_text):
+		# 	resp_text = add_token(int(inp_text), True, 0, False, network)
+		# 	connect_user_token(update.effective_chat.id, int(inp_text))
 		if resp_text:
 			await update.message.reply_text(resp_text)
 	except Exception as e:

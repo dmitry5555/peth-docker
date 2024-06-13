@@ -10,7 +10,7 @@ services:
     # ports:
     #   - "5432:5432"
     volumes:
-      - dbdata:/var/lib/postgresql/data
+      - dbdata1:/var/lib/postgresql/data
 
   script-parse:
     build:
@@ -91,5 +91,5 @@ services:
 
 
 volumes:
-  dbdata:
+  dbdata1:
   logs:
