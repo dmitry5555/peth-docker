@@ -31,7 +31,7 @@ async def send_message():
 			# обновляем базу и шлем сообщения (100-1000 разом все должно быть ок)
 			if text:
 				try:
-					await bot.send_message(chat_id=chat_id, text=text, parse_mode='Markdown', link_preview=False)
+					await bot.send_message(chat_id=chat_id, text=text, parse_mode='Markdown')
 					mark_as_sent(message.id)
 					# sent_ids.append(message.id)
 				except TelegramError as e:
