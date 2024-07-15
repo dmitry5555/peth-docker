@@ -27,9 +27,9 @@ base_pool_address = Web3.to_checksum_address('0xd0b53d9277642d899df5c87a3966a349
 arbit_pool_address = Web3.to_checksum_address('0xc6962004f452be9203591991d15f6b388e09e8d0')
 
 with open('./optim_nft_position_manager_abi.json', 'r') as w:
-    nft_position_manager_abi = json.load(w)
+	nft_position_manager_abi = json.load(w)
 with open('./optim_pool_abi.json', 'r') as w:
-    optim_pool_abi = json.load(w)
+	optim_pool_abi = json.load(w)
 with open('./base_pool_abi.json', 'r') as w:
 	base_pool_abi = json.load(w)
 with open('./arbit_pool_abi.json', 'r') as w:
@@ -135,13 +135,16 @@ def get_pool_liquidity_by_nft_id(token, network, token_users) -> None:
 	logger.info(f"{datetime.now()}: ⚠️ Tick Lower: {tick_lower}")
 	logger.info(f"{datetime.now()}: ⚠️ Tick Upper: {tick_upper}")
 	logger.info(f"{datetime.now()}: ⚠️ Current Tick: {current_tick}")
-
+	network_log = network
+	if network == 'ethereum':
+		network_log = 'mainnet'
 	# liquidity changed to 0 - position is closed and there will be no liquidity in this NFTID 
 	if int(liquidity) == 0:
 		upd_liquidity(nft_id, 0)
 		for token_user in token_users:
 			logger.info(f'{datetime.now()}: 💧 No liquidity. NFT ID: {nft_id}.')
-			add_message(token_user.chat_id, f'💧 No liquidity. NFT ID: {nft_id}.')
+			add_message(token_user.chat_id, f'💧 No liquidity. NFT ID: [{nft_id}](https://app.uniswap.org/pool/{nft_id}?chain={network_log}).')
+
 	# # liquidity added
 	# if int(liquidity) > 0 and int(token.liquidity) == 0:
 	# 	upd_liquidity(nft_id, int(liquidity))
@@ -154,14 +157,14 @@ def get_pool_liquidity_by_nft_id(token, network, token_users) -> None:
 			upd_is_in_range(nft_id, False)
 			for token_user in token_users:
 				logger.info(f'{datetime.now()}: 📈 Out of range. NFT ID: {nft_id}.')
-				add_message(token_user.chat_id, f'📈 Out of range. NFT ID: {nft_id}.')
+				add_message(token_user.chat_id, f'📈 Out of range. NFT ID: [{nft_id}](https://app.uniswap.org/pool/{nft_id}?chain={network_log}).')
 
 	if (price_lower < current_price) and (current_price < price_upper):
 		if not (token.is_in_range):
 			upd_is_in_range(nft_id, True)
 			for token_user in token_users:
 				logger.info(f'{datetime.now()}: 📉 In range. NFT ID: {nft_id}.')
-				add_message(token_user.chat_id, f'📉 In range. NFT ID: {nft_id}.')
+				add_message(token_user.chat_id, f'📉 In range. NFT ID: [{nft_id}](https://app.uniswap.org/pool/{nft_id}?chain={network_log}).')
 
 	# print(f"NFT ID: {nft_id}")
 	# print(f"Liquidity: {liquidity}")
