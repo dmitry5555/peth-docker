@@ -1,5 +1,5 @@
 # from dotenv import load_dotenv
-from peewee import Model, PostgresqlDatabase, IntegerField, CharField, BooleanField
+from peewee import Model, PostgresqlDatabase, IntegerField, CharField, TextField, BooleanField
 import os
 
 # load_dotenv()
@@ -38,6 +38,7 @@ class Token(BaseModel):
 	liquidity = CharField()
 	is_in_range = BooleanField(default=False)
 	network = CharField()
+	pair_pool = CharField()
 
 	class Meta:
 		database = db
@@ -51,7 +52,7 @@ class UserToken(BaseModel):
 
 class Message(BaseModel):
 	chat_id = IntegerField()
-	text = CharField()
+	text = TextField()
 	is_sent = BooleanField(default=False)
 
 	class Meta:
@@ -63,7 +64,6 @@ def initialize_db():
 		db.create_tables([Token], safe=True)
 		db.create_tables([Message], safe=True)
 		db.create_tables([UserToken], safe=True)
-
 
 def add_user(chat_id, wallet):
 	with db:
@@ -89,9 +89,9 @@ def get_users():
 
 # кейсы   1 - новая позииция  2 - ликвидность изменилась после 0  3 - ликвидность также выше нуля (ничего не делать)
 
-def add_token(token_id, is_manual, liquidity, is_in_range, network):
+def add_token(token_id, is_manual, liquidity, is_in_range, network, pair_pool):
 	with db:
-		token, created = Token.get_or_create(token_id=token_id, network=network, defaults={'is_manual': is_manual, 'liquidity': liquidity, 'is_in_range': is_in_range})
+		token, created = Token.get_or_create(token_id=token_id, network=network, pair_pool=pair_pool, defaults={'is_manual': is_manual, 'liquidity': liquidity, 'is_in_range': is_in_range})
 		if created:
 			return True
 
@@ -122,12 +122,6 @@ def upd_is_in_range(token_id, is_in_range):
 		# token = Token.get(token_id=token_id)
 		# token.save()
 
-# def is__token(token_id):
-# 	db.connect()
-# 	token = Token.get(token_id=token_id)
-# 	token.is_active = False
-# 	token.save()
-# 	db.close()
 
 def add_message(chat_id, text):
 	with db:

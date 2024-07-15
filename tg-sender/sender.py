@@ -20,7 +20,6 @@ handler = RotatingFileHandler(filename='/var/logs/sender.log', maxBytes=1048576,
 logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
-
 async def send_message():
 	bot = Application.builder().token(token).build().bot # до 30 сообщений в секунду но это не точно
 	while True:
@@ -29,10 +28,10 @@ async def send_message():
 			text = message.text
 			chat_id = message.chat_id
 			# user_id = message.user_id
-			#обновляем базу и шлем сообщения (100-1000 разом все должно быть ок)
+			# обновляем базу и шлем сообщения (100-1000 разом все должно быть ок)
 			if text:
 				try:
-					await bot.send_message(chat_id=chat_id, text=text)
+					await bot.send_message(chat_id=chat_id, text=text, parse_mode='Markdown', link_preview=False)
 					mark_as_sent(message.id)
 					# sent_ids.append(message.id)
 				except TelegramError as e:

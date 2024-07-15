@@ -15,10 +15,11 @@ import os
 
 # Wallet
 optim_nft_position_manager_address = Web3.to_checksum_address('0xc36442b4a4522e871399cd717abdd847ab11fe88')
-base_nft_position_manager_address = Web3.to_checksum_address('0x03a520b32c04bf3beef7beb72e919cf822ed34f1')
 arbit_nft_position_manager_address = Web3.to_checksum_address('0xc36442b4a4522e871399cd717abdd847ab11fe88')
+base_nft_position_manager_address = Web3.to_checksum_address('0x03a520b32c04bf3beef7beb72e919cf822ed34f1')
 
 # Optimism - Uniswap V3 (Optimism) - USD Coin Price (USDC)
+ethereum_pool_address = Web3.to_checksum_address('0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640')
 optim_pool_address = Web3.to_checksum_address('0x1fb3cf6e48F1E7B10213E7b6d87D4c073C7Fdb7b')
 # base usdc/weth
 base_pool_address = Web3.to_checksum_address('0xd0b53d9277642d899df5c87a3966a349a798f224')
@@ -35,6 +36,7 @@ with open('./arbit_pool_abi.json', 'r') as w:
 	arbit_pool_abi = json.load(w)
 
 ankr_token = os.getenv('ANKR_TOKEN')
+ethereum_url = 'https://rpc.ankr.com/eth/' + ankr_token
 optim_url = 'https://rpc.ankr.com/optimism/' + ankr_token
 arbit_url = 'https://rpc.ankr.com/arbitrum/' + ankr_token
 base_url = 'https://rpc.ankr.com/base/' + ankr_token
@@ -61,14 +63,19 @@ def get_pool_liquidity_by_nft_id(token, network, token_users) -> None:
 
 	if (network == 'optimism'):
 		rpc_url = optim_url
+		nft_position_manager_address = optim_nft_position_manager_address
 		pool_abi = optim_pool_abi
 		pool_address = optim_pool_address
-		nft_position_manager_address = optim_nft_position_manager_address
 	elif (network == 'arbitrum'):
 		rpc_url = arbit_url
+		nft_position_manager_address = arbit_nft_position_manager_address
 		pool_abi = arbit_pool_abi
 		pool_address = arbit_pool_address
-		nft_position_manager_address = arbit_nft_position_manager_address
+	elif (network == 'ethereum'):
+		rpc_url = ethereum_url
+		nft_position_manager_address = optim_nft_position_manager_address
+		pool_abi = optim_pool_abi
+		pool_address = ethereum_pool_address
 	elif (network == 'base'):
 		rpc_url = base_url
 		pool_abi = base_pool_abi
