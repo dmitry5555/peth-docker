@@ -1,4 +1,4 @@
-# для обновления базы просто берем новый том dbdataXX
+# для обновления базы просто берем новый том dbdataXX (в 2 местах)
 
 services:
   postgres:
@@ -12,7 +12,7 @@ services:
     # ports:
     #   - "5432:5432"
     volumes:
-      - dbdata:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
 
   script-parse:
     build:
@@ -93,5 +93,5 @@ services:
 
 
 volumes:
-  dbdata2:
+  db_data:
   logs:
