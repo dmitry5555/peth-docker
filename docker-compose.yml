@@ -14,7 +14,6 @@ services:
     volumes:
       - dbdata:/var/lib/postgresql/data
 
-
   script-parse:
     build:
       context: .
